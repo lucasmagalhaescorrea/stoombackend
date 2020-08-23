@@ -21,8 +21,8 @@ public class Endereco implements Serializable {
     private String state;
     private String country;
     private String zipcode;
-    private int latidade;
-    private int longitude;
+    private double latidade;
+    private double longitude;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,20 +107,20 @@ public class Endereco implements Serializable {
     }
 
     @Column(name = "latidade", nullable = true)
-    public int getLatidade() {
+    public double getLatidade() {
         return latidade;
     }
 
-    public void setLatidade(int latidade) {
+    public void setLatidade(double latidade) {
         this.latidade = latidade;
     }
 
     @Column(name = "longitude", nullable = true)
-    public int getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(int longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 }

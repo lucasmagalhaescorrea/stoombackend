@@ -8,8 +8,8 @@ CREATE TABLE `endereco` (
 `state` varchar(50) NOT NULL,
 `country` varchar(50) NOT NULL,
 `zipcode` varchar(20) NOT NULL,
-`latidade` int(4) NULL,
-`longitude` int(4) NULL
+`latidade` double NULL,
+`longitude` double NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `endereco`

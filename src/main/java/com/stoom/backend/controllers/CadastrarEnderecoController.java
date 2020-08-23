@@ -1,5 +1,10 @@
 package com.stoom.backend.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.GeocodingResult;
 import com.stoom.backend.dtos.EnderecoDTO;
 import com.stoom.backend.entities.Endereco;
 import com.stoom.backend.response.Response;
@@ -26,6 +31,8 @@ public class CadastrarEnderecoController {
 
     private EnderecoService enderecoService;
 
+    private static final String TOKEN_GOOGLE_API = "AIzaSyA042BXS3QIeuAoEzpoOowFqwOjnP4dCjo";
+
     @Autowired
     public CadastrarEnderecoController(EnderecoService enderecoService) {
         this.enderecoService = enderecoService;
@@ -36,10 +43,10 @@ public class CadastrarEnderecoController {
             BindingResult result) throws NoSuchAlgorithmException {
 
         Response<EnderecoDTO> response = new Response<EnderecoDTO>();
-
-        this.validarDadosExistentes(enderecoDto, result);
-
+        
         Endereco endereco = this.converterDtoParaEndereco(enderecoDto);
+
+        this.tratarLatitudeLongitude(endereco, result);
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
@@ -91,14 +98,44 @@ public class CadastrarEnderecoController {
         return dto;
     }
 
-    private void validarDadosExistentes(EnderecoDTO enderecoDto, BindingResult result) {
-//        if ( Optional.ofNullable(enderecoDto.getId()).isPresent()) {
-//            this.enderecoService.findByZipcodeAndNumberAndId(enderecoDto.getZipcode(), enderecoDto.getNumber(), enderecoDto.getId())
-//                    .ifPresent(end -> result.addError(new ObjectError("endereco", "Endereço já existente.")));
-//        } else  {
-//            this.enderecoService.findByZipcodeAndNumber(enderecoDto.getZipcode(), enderecoDto.getNumber())
-//                    .ifPresent(end -> result.addError(new ObjectError("endereco", "Endereço já existente.")));
-//        }
+    private String getEnderecoMensagem(Endereco endereco) {
+        StringBuilder adress = new StringBuilder();
+        adress.append(endereco.getNumber());
+        adress.append(" " + endereco.getStreetName());
+        adress.append(" " + endereco.getNeighbourhood());
+        adress.append(" " + endereco.getCity());
+        adress.append(", " + endereco.getState());
+        adress.append(" " + endereco.getZipcode());
+
+        return adress.toString();
     }
-    
+
+    private void tratarLatitudeLongitude(Endereco endereco, BindingResult result) {
+        try {
+            if (endereco.getLatidade() == 0
+                    || endereco.getLongitude() == 0) {
+
+                GeoApiContext context = new GeoApiContext.Builder()
+                        .apiKey(TOKEN_GOOGLE_API)
+                        .build();
+                GeocodingResult[] geoResults = GeocodingApi.geocode(context,
+                        getEnderecoMensagem(endereco)
+                ).await();
+                
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                
+                if(geoResults.length == 0){
+                    result.addError(new ObjectError("Endereço", "Endereço não localizado!"));
+                    return;
+                }
+                
+                endereco.setLatidade(geoResults[0].geometry.location.lat);
+                endereco.setLongitude(geoResults[0].geometry.location.lng);
+
+            }
+        } catch (Exception ex) {
+            result.addError(new ObjectError("Endereço", "Erro . Geocoding API : " + ex.getMessage()));
+        }
+    }
+
 }

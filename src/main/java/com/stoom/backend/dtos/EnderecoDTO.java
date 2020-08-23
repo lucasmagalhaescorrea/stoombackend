@@ -14,8 +14,8 @@ public class EnderecoDTO {
     private String state;
     private String country;
     private String zipcode;
-    private int latidade;
-    private int longitude;
+    private double latidade;
+    private double longitude;
 
     public Long getId() {
         return id;
@@ -26,7 +26,7 @@ public class EnderecoDTO {
     }
 
     @NotEmpty(message = "Rua não pode ser vazio!")
-    @Length(min = 1, max = 255, message = "Rua deve ter no máximo 255 caracteres")
+    @Length(min = 0, max = 255, message = "Rua deve ter no máximo 255 caracteres")
     public String getStreetName() {
         return streetName;
     }
@@ -36,7 +36,7 @@ public class EnderecoDTO {
     }
 
     @NotEmpty(message = "Número não pode ser vazio!")
-    @Length(min = 1, max = 10, message = "Número deve ter no máximo 10 caracteres")
+    @Length(min = 0, max = 10, message = "Número deve ter no máximo 10 caracteres")
     public String getNumber() {
         return number;
     }
@@ -55,7 +55,7 @@ public class EnderecoDTO {
     }
 
     @NotEmpty(message = "Bairro não pode ser vazio!")
-    @Length(min = 1, max = 100, message = "Bairro deve ter no máximo 100 caracteres")
+    @Length(min = 0, max = 100, message = "Bairro deve ter no máximo 100 caracteres")
     public String getNeighbourhood() {
         return neighbourhood;
     }
@@ -65,7 +65,7 @@ public class EnderecoDTO {
     }
 
     @NotEmpty(message = "Cidade não pode ser vazio!")
-    @Length(min = 1, max = 50, message = "Cidade deve ter no máximo 50 caracteres")
+    @Length(min = 0, max = 50, message = "Cidade deve ter no máximo 50 caracteres")
     public String getCity() {
         return city;
     }
@@ -75,7 +75,7 @@ public class EnderecoDTO {
     }
 
     @NotEmpty(message = "Estado não pode ser vazio!")
-    @Length(min = 1, max = 50, message = "Estado deve ter no máximo 50 caracteres")
+    @Length(min = 0, max = 50, message = "Estado deve ter no máximo 50 caracteres")
     public String getState() {
         return state;
     }
@@ -85,7 +85,7 @@ public class EnderecoDTO {
     }
 
     @NotEmpty(message = "País não pode ser vazio!")
-    @Length(min = 1, max = 50, message = "País deve ter no máximo 50 caracteres")
+    @Length(min = 0, max = 50, message = "País deve ter no máximo 50 caracteres")
     public String getCountry() {
         return country;
     }
@@ -95,7 +95,7 @@ public class EnderecoDTO {
     }
 
     @NotEmpty(message = "CEP nao pode ser vazio!")
-    @Length(min = 1, max = 20, message = "CEP deve ter no maximo 20 caracteres")
+    @Length(min = 0, max = 20, message = "CEP deve ter no maximo 20 caracteres")
     public String getZipcode() {
         return zipcode;
     }
@@ -104,19 +104,19 @@ public class EnderecoDTO {
         this.zipcode = zipcode;
     }
     
-    public int getLatidade() {
+    public double getLatidade() {
         return latidade;
     }
 
-    public void setLatidade(int latidade) {
+    public void setLatidade(double latidade) {
         this.latidade = latidade;
     }
 
-    public int getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(int longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
     

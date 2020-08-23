@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - TZ=GMT-3
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=stoomlucas
+      - MYSQL_USER=stoomlucas
+      - MYSQL_PASSWORD=stoomlucas
+    ports:
+      - "3306"
+    networks:
+      - compose-network
+
+  backend:
+    container_name: backend
+    restart: on-failure
+    build:
+      context: ./
+      dockerfile: dockerfile
+    image: backend
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=GMT-3
+      - WAIT_HOSTS=mysql:3306
+    depends_on:
+      - mysql
+    networks:
+      - compose-network
+
+networks:
+  compose-network:
+    driver: bridge
