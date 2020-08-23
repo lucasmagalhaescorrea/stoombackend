@@ -2,8 +2,9 @@ version: '3.7'
 
 services:
   mysql:
+    hostname: mysql
     container_name: mysql
-    image: mysql
+    image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
@@ -13,7 +14,7 @@ services:
       - MYSQL_USER=stoomlucas
       - MYSQL_PASSWORD=stoomlucas
     ports:
-      - "3306"
+      - "3306:3306"
     networks:
       - compose-network
 
@@ -26,13 +27,13 @@ services:
     image: backend
     ports:
       - "8080:8080"
-    environment:
-      - TZ=GMT-3
-      - WAIT_HOSTS=mysql:3306
     depends_on:
       - mysql
     networks:
       - compose-network
+    environment:
+      - TZ=GMT-3
+      - WAIT_HOSTS=mysql:3306
 
 networks:
   compose-network:
